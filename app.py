@@ -820,7 +820,6 @@ if st.session_state.page == 'home':
             st.markdown(f"""
             <div class="modal-overlay" id="resultModal">
                 <div class="modal-card {card_cls}">
-                    <div class="emoji-big">{emoji}</div>
                     <div class="modal-label {label_cls}">{res['prediction']}</div>
                     <form action="" method="get">
                         <button type="submit" name="close_modal" value="1" class="modal-close-btn">Tutup</button>
