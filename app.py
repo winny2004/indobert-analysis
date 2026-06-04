@@ -720,7 +720,11 @@ if 'selected_review_id' not in st.session_state:
 
 # Handle query param navigation from anchor clicks
 qp = st.query_params
-if 'detail' in qp:
+if 'close_modal' in qp:
+    if 'last_result' in st.session_state:
+        del st.session_state.last_result
+    del st.query_params['close_modal']
+elif 'detail' in qp:
     try:
         detail_id = int(qp['detail'])
         source = qp.get('source', 'home')
@@ -811,18 +815,19 @@ if st.session_state.page == 'home':
             is_positive = res['prediction'] == "Puas"
             card_cls = "modal-card-positive" if is_positive else "modal-card-negative"
             label_cls = "modal-label-positive" if is_positive else "modal-label-negative"
+            emoji = "&#x1F604;" if is_positive else "&#x1F61E;"
 
             st.markdown(f"""
             <div class="modal-overlay" id="resultModal">
                 <div class="modal-card {card_cls}">
+                    <div class="emoji-big">{emoji}</div>
                     <div class="modal-label {label_cls}">{res['prediction']}</div>
-                    <div class="modal-subtext">Puas: {res['prob_dict']['Puas']*100:.1f}% &bull; Tidak Puas: {res['prob_dict']['Tidak Puas']*100:.1f}%</div>
+                    <form action="" method="get">
+                        <button type="submit" name="close_modal" value="1" class="modal-close-btn">Tutup</button>
+                    </form>
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button("Tutup Hasil", key="close_result_btn"):
-                del st.session_state.last_result
-                st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
 
