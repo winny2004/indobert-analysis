@@ -799,20 +799,30 @@ if st.session_state.page == 'home':
                         review_input, tokenizer, indobert_model, slang_dict
                     )
                     add_review_to_history(review_input, prediction, prob_dict, processed)
-                    is_positive = prediction == "Puas"
-                    card_cls = "modal-card-positive" if is_positive else "modal-card-negative"
-                    label_cls = "modal-label-positive" if is_positive else "modal-label-negative"
-
-                    st.markdown(f"""
-                    <div class="modal-overlay" id="resultModal">
-                        <div class="modal-card {card_cls}">
-                            <div class="modal-label {label_cls}">{prediction}</div>
-                            <a href="/" target="_self" class="modal-close-btn">Tutup</a>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    st.session_state.last_result = {
+                        'prediction': prediction,
+                        'prob_dict': prob_dict,
+                    }
             else:
                 st.warning("Silakan masukkan review terlebih dahulu.")
+
+        if 'last_result' in st.session_state:
+            res = st.session_state.last_result
+            is_positive = res['prediction'] == "Puas"
+            card_cls = "modal-card-positive" if is_positive else "modal-card-negative"
+            label_cls = "modal-label-positive" if is_positive else "modal-label-negative"
+
+            st.markdown(f"""
+            <div class="modal-overlay" id="resultModal">
+                <div class="modal-card {card_cls}">
+                    <div class="modal-label {label_cls}">{res['prediction']}</div>
+                    <div class="modal-subtext">Puas: {res['prob_dict']['Puas']*100:.1f}% &bull; Tidak Puas: {res['prob_dict']['Tidak Puas']*100:.1f}%</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Tutup Hasil", key="close_result_btn"):
+                del st.session_state.last_result
+                st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
 
