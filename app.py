@@ -10,6 +10,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
+# final ver
 plt.rcParams.update({
     'figure.facecolor': '#ffffff',
     'axes.facecolor': '#fafafa',
