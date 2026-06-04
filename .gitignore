@@ -1,0 +1,7 @@
+.env
+model indobert aja.pkl
+indobert_model/
+hf_model_temp/
+PROJECT AI.ipynb
+__pycache__/
+*.pyc
